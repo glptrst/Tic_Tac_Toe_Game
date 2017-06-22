@@ -6,6 +6,9 @@ window.onload = function() {
     // store user and computer sign ('O' or 'X')
     var userSign = null;
     var computerSign = null;
+
+    // keep track of how many moves have been made
+    var moves = 0;
     
     document.getElementById('restart').addEventListener('click', restart);
   
@@ -35,15 +38,12 @@ window.onload = function() {
 		var markText = document.createTextNode(userSign);
 		mark.appendChild(markText);
 		this.appendChild(mark);
-	    }
-	}
-    }
 
-    function restart() {
-	userSign = null;
-	for (let i = 0; i < gameBtns.length; i++) {
-	    if (gameBtns[i].firstChild !== null)
-		gameBtns[i].firstChild.remove();
+		++moves;
+
+		if (moves < 9)
+		    computerPlay();
+	    }
 	}
     }
 
@@ -51,6 +51,26 @@ window.onload = function() {
 	// select a random square
 	var squareId = randomRange(1, 9);
 
+	var square = document.getElementById(squareId);
+
+	if (square.firstChild === null) {
+	    var mark = document.createElement('span');
+	    var markText = document.createTextNode(computerSign);
+	    mark.appendChild(markText);
+	    square.appendChild(mark);
+
+	    ++moves;
+	} else
+	    computerPlay();
+    }
+
+    function restart() {
+	userSign = null;
+	moves = 0;
+	for (let i = 0; i < gameBtns.length; i++) {
+	    if (gameBtns[i].firstChild !== null)
+		gameBtns[i].firstChild.remove();
+	}
     }
 
     // generate a random number between a range

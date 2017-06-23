@@ -7,6 +7,8 @@ window.onload = function() {
     var userSign = null;
     var computerSign = null;
 
+    var gameIsOver = false;
+
     // keep track of how many moves have been made
     var moves = 0;
     
@@ -39,9 +41,11 @@ window.onload = function() {
 		mark.appendChild(markText);
 		this.appendChild(mark);
 
+		evaluate();
+
 		++moves;
 
-		if (moves < 9)
+		if (moves < 9 && !gameIsOver)
 		    computerPlay();
 	    }
 	}
@@ -60,11 +64,14 @@ window.onload = function() {
 	    square.appendChild(mark);
 
 	    ++moves;
+
+	    evaluate();
 	} else
 	    computerPlay();
     }
 
     function restart() {
+	gameIsOver = false;
 	userSign = null;
 	moves = 0;
 	for (let i = 0; i < gameBtns.length; i++) {
@@ -77,5 +84,52 @@ window.onload = function() {
     function randomRange(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    
+
+    // check if someone won
+    function evaluate() {
+	// square nodes
+	var s1 = document.getElementById('1');
+	var s2 = document.getElementById('2');
+	var s3 = document.getElementById('3');
+	var s4 = document.getElementById('4');
+	var s5 = document.getElementById('5');
+	var s6 = document.getElementById('6');
+	var s7 = document.getElementById('7');
+	var s8 = document.getElementById('8');
+	var s9 = document.getElementById('9');
+
+	if (
+	    //horizontal rows
+	    evaluateRow(s1, s2, s3) ||
+	    evaluateRow(s4, s5, s6) ||
+	    evaluateRow(s7, s8, s9) ||
+	    //vertical rows
+	    evaluateRow(s1, s4, s7) ||
+	    evaluateRow(s2, s5, s8) ||
+	    evaluateRow(s3, s6, s9) ||
+	    //oblique rows
+	    evaluateRow(s1, s5, s9) ||
+	    evaluateRow(s3, s5, s7)
+	)
+	    declareWinner();
+    }
+
+    // Evaluate single row. Gets the tree squares (nodes) as arguments.
+    // Return true if row is a winning one, false otherwise.
+    function evaluateRow(first, second, third) {
+	// check that all three squares have been signed before checking it
+	if (first.firstChild !== null  && second.firstChild !== null && third.firstChild !== null) {
+	    if (first.firstChild.firstChild.nodeValue === second.firstChild.firstChild.nodeValue && second.firstChild.firstChild.nodeValue === third.firstChild.firstChild.nodeValue)
+		return true;
+	    else
+		return false;
+	} else
+	    return false;
+    }
+
+    // Declare winner
+    function declareWinner() {
+	gameIsOver = true;
+	console.log('game over');
+    }
 };

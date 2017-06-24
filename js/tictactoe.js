@@ -75,6 +75,10 @@ window.onload = function() {
 	userSign = null;
 	moves = 0;
 	for (let i = 0; i < gameBtns.length; i++) {
+	    //remove colors
+	    gameBtns[i].setAttribute('style', ' ');
+	    //enable buttons
+	    gameBtns[i].removeAttribute('disabled');
 	    if (gameBtns[i].firstChild !== null)
 		gameBtns[i].firstChild.remove();
 	}
@@ -98,23 +102,25 @@ window.onload = function() {
 	var s8 = document.getElementById('8');
 	var s9 = document.getElementById('9');
 
-	if (
-	    //horizontal rows
-	    evaluateRow(s1, s2, s3) ||
-	    evaluateRow(s4, s5, s6) ||
-	    evaluateRow(s7, s8, s9) ||
-	    //vertical rows
-	    evaluateRow(s1, s4, s7) ||
-	    evaluateRow(s2, s5, s8) ||
-	    evaluateRow(s3, s6, s9) ||
-	    //oblique rows
-	    evaluateRow(s1, s5, s9) ||
-	    evaluateRow(s3, s5, s7)
-	)
-	    declareWinner();
+	if (evaluateRow(s1, s2, s3))//orizontal rows
+	    declareWinner(s1, s2, s3);
+	else if (evaluateRow(s4, s5, s6))
+	    declareWinner(s4, s5, s6);
+	else if (evaluateRow(s7, s8, s9))
+	    declareWinner(s7, s8, s9);
+	else if (evaluateRow(s1, s4, s7))//vertical rows
+	    declareWinner(s1, s4, s7);
+	else if (evaluateRow(s2, s5, s8))
+	    declareWinner(s2, s5, s8);
+	else if (evaluateRow(s3, s6, s9))
+	    declareWinner(s3, s6, s9);
+	else if (evaluateRow(s1, s5, s9))//oblique rows
+	    declareWinner(s1, s5, s9);
+	else if (evaluateRow(s3, s5, s7))
+	    declareWinner(s3, s5, s7);
     }
 
-    // Evaluate single row. Gets the tree squares (nodes) as arguments.
+    // Gets the tree squares (nodes) as arguments.
     // Return true if row is a winning one, false otherwise.
     function evaluateRow(first, second, third) {
 	// check that all three squares have been signed before checking it
@@ -127,9 +133,21 @@ window.onload = function() {
 	    return false;
     }
 
-    // Declare winner
-    function declareWinner() {
+    // Declare winner. Get the winner squares (nodes) as arguments
+    function declareWinner(square1, square2, square3) {
 	gameIsOver = true;
-	console.log('game over');
+	
+	console.log('game over. Winner row: ' + square1.id + ' ' + square2.id + ' ' + square3.id);
+	
+	// color winner squares
+	square1.setAttribute('style', 'background-color: red');
+	square2.setAttribute('style', 'background-color: red');
+	square3.setAttribute('style', 'background-color: red');
+
+	// disable buttons
+	for (let i = 0; i < gameBtns.length; i++) {
+	    gameBtns[i].setAttribute('disabled', 'disabled');
+	}
+
     }
 };

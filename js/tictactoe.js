@@ -29,6 +29,9 @@ window.onload = function() {
 		computerSign = 'O';
 	    else
 		computerSign = 'X';
+
+
+	    setInstruction('Game is on!');
 	}
     }
 
@@ -74,6 +77,9 @@ window.onload = function() {
 	gameIsOver = false;
 	userSign = null;
 	moves = 0;
+
+	setInstruction('');
+	
 	for (let i = 0; i < gameBtns.length; i++) {
 	    //remove colors
 	    gameBtns[i].setAttribute('style', ' ');
@@ -136,8 +142,11 @@ window.onload = function() {
     // Declare winner. Get the winner squares (nodes) as arguments
     function declareWinner(square1, square2, square3) {
 	gameIsOver = true;
-	
-	console.log('game over. Winner row: ' + square1.id + ' ' + square2.id + ' ' + square3.id);
+
+	if (square1.firstChild.firstChild.nodeValue === userSign)
+	    setInstruction('Game Over! You won!');
+	else
+	    setInstruction('Game Over! You lost!')
 	
 	// color winner squares
 	square1.setAttribute('style', 'background-color: red');
@@ -149,5 +158,15 @@ window.onload = function() {
 	    gameBtns[i].setAttribute('disabled', 'disabled');
 	}
 
+    }
+
+    // display message to the user
+    function setInstruction(message) {
+	var el = document.getElementById('instructions');
+
+	if (el.firstChild !== null)
+	    el.firstChild.remove();
+	
+	el.appendChild(document.createTextNode(message));
     }
 };

@@ -158,6 +158,7 @@ window.onload = function() {
 	    gameBtns[i].setAttribute('disabled', 'disabled');
 	}
 
+	setTimeout(restart, 2000);
     }
 
     // display message to the user
